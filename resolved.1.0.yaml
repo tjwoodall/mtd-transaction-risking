@@ -7,6 +7,8 @@ info:
     You must follow a two-step process:
     1. Send draft return data.
     2. Use the relevant acknowledgement endpoint to confirm that your software has presented the HMRC Assist feedback messages to the user.
+
+    Because this process operates on draft, unfinalised data, requesting feedback carries no formal declaration. Also, the process does not block formal declaration submission via the *returns* endpoint of the VAT (MTD) API. Your software must allow customers to submit their VAT return, irrespective of any HMRC Assist submission feedback.
   contact: {}
   version: "1.0"
 servers:
@@ -71,6 +73,27 @@ paths:
         schema:
           type: string
           example: "-"
+      - name: Accept
+        in: header
+        description: |
+          Specifies the response format and the version of the API to be used.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - application/vnd.hmrc.1.0+json
+      - name: Authorization
+        in: header
+        description: |
+          An OAuth 2.0 Bearer Token with the *write:vat* scope.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: Bearer bb7fed3fe10dd235a2ccda3d50fb
       requestBody:
         content:
           application/json:
@@ -134,7 +157,13 @@ paths:
                   minimum: 0.0
                   type: number
                   description: |
-                    The difference between totalVatDue and vatReclaimedCurrPeriod. This corresponds to box 5 on the VAT Return form.
+                    The absolute difference between the *totalVatDue* and
+                    *vatReclaimedCurrPeriod* values. This should therefore be a positive
+                    number, calculated by subtracting the smallest value from the
+                    largest. HMRC will automatically determine whether the number
+                    represents net VAT that is due or net VAT that can be reclaimed.
+
+                    This corresponds to box 5 on the VAT Return form.
                   example: 52.75
                 totalValueSalesExVAT:
                   maximum: 9999999999999
@@ -209,7 +238,7 @@ paths:
                   correlationId:
                     type: string
                     description: The correlation ID of the report.
-                    example: c75f40a6-a3df-4429-a697-471eeec46435
+                    example: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
                   englishFeedback:
                     type: array
                     description: "An array that contains up to 5 HMRC Assist feedback\
@@ -341,14 +370,14 @@ paths:
                             the feedback presented in the message.
                           example: vatDueSales
               examples:
-                Example 1:
+                Example 1 (single feedback message):
                   description: |
                     The scenario where there is one HMRC Assist feedback message.
 
                     Note that the feedback message in this example is for illustration purposes only. Actual feedback messages may differ.
                   value:
                     reportId: f2fb30e5-4ab6-4a29-b3c1-c00000000001
-                    correlationId: c75f40a6-a3df-4429-a697-471eeec46435
+                    correlationId: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
                     englishFeedback:
                     - itemNumber: "001"
                       title: VAT due on sales appears low
@@ -370,6 +399,52 @@ paths:
                       - title: Hysbysiad TAW 700
                         url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
                       path: vatDueSales
+                Example 2 (multiple feedback messages):
+                  description: |
+                    The scenario where there are multiple HMRC Assist feedback messages.
+
+                    Note that the feedback messages in this example are for illustration purposes only. Actual feedback messages may differ.
+                  value:
+                    reportId: f2fb30e5-4ab6-4a29-b3c1-c00000000001
+                    correlationId: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
+                    englishFeedback:
+                    - itemNumber: "001"
+                      title: VAT due on sales appears low
+                      body: The VAT due on sales figure appears lower than expected
+                        based on your total sales value.
+                      action: Please review box 1 and box 6 of your VAT return.
+                      links:
+                      - title: VAT Notice 700
+                        url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
+                      path: vatDueSales
+                    - itemNumber: "002"
+                      title: Total value of purchases appears high
+                      body: The total value of purchases appears higher than expected
+                        based on your total sales value.
+                      action: Please review box 7 of your VAT return.
+                      links:
+                      - title: VAT Notice 700
+                        url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
+                      path: totalValuePurchasesExVAT
+                    welshFeedback:
+                    - itemNumber: "001"
+                      title: Mae TAW sy'n ddyledus ar werthiannau yn ymddangos yn
+                        isel
+                      body: Mae'r ffigur TAW sy'n ddyledus ar werthiannau yn ymddangos
+                        yn is na'r disgwyl yn seiliedig ar gyfanswm eich gwerthiannau.
+                      action: Adolygwch flwch 1 a blwch 6 eich ffurflen TAW.
+                      links:
+                      - title: Hysbysiad TAW 700
+                        url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
+                      path: vatDueSales
+                    - itemNumber: "002"
+                      title: Mae cyfanswm pryniannau'n uchel
+                      body: Mae cyfanswm y pryniannau'n ymddangos yn uwch na'r disgwyl.
+                      action: Adolygwch flwch 7 o'ch ffurflen TAW.
+                      links:
+                      - title: Hysbysiad TAW 700
+                        url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
+                      path: totalValuePurchasesExVAT
         "400":
           description: Bad request. Invalid request body or parameters.
           content:
@@ -606,13 +681,12 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "^[A-Za-z0-9\\-]{36}$"
           type: string
-          example: c75f40a6-a3df-4429-a697-471eeec46435
+          example: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
       - name: presentedDateTime
         in: query
-        description: The date and time that the feedback was presented verbatim to
-          the user.
+        description: The date and time (in Z/UTC) that the feedback was presented
+          verbatim to the user.
         required: true
         style: form
         explode: true
@@ -630,6 +704,27 @@ paths:
         schema:
           type: string
           example: "-"
+      - name: Accept
+        in: header
+        description: |
+          Specifies the response format and the version of the API to be used.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - application/vnd.hmrc.1.0+json
+      - name: Authorization
+        in: header
+        description: |
+          An OAuth 2.0 Bearer Token with the *write:vat* scope.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: Bearer bb7fed3fe10dd235a2ccda3d50fb
       responses:
         "204":
           description: Acknowledgement recorded successfully. No content returned.
@@ -843,7 +938,13 @@ components:
           minimum: 0.0
           type: number
           description: |
-            The difference between totalVatDue and vatReclaimedCurrPeriod. This corresponds to box 5 on the VAT Return form.
+            The absolute difference between the *totalVatDue* and
+            *vatReclaimedCurrPeriod* values. This should therefore be a positive
+            number, calculated by subtracting the smallest value from the
+            largest. HMRC will automatically determine whether the number
+            represents net VAT that is due or net VAT that can be reclaimed.
+
+            This corresponds to box 5 on the VAT Return form.
           example: 52.75
         totalValueSalesExVAT:
           maximum: 9999999999999
@@ -891,7 +992,7 @@ components:
         correlationId:
           type: string
           description: The correlation ID of the report.
-          example: c75f40a6-a3df-4429-a697-471eeec46435
+          example: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
         englishFeedback:
           type: array
           description: "An array that contains up to 5 HMRC Assist feedback messages,\
@@ -1105,6 +1206,30 @@ components:
           type: string
           description: A human-readable description of the error.
           example: The provided VRN is invalid.
+  parameters:
+    acceptHeader:
+      name: Accept
+      in: header
+      description: |
+        Specifies the response format and the version of the API to be used.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        enum:
+        - application/vnd.hmrc.1.0+json
+    authorizationWriteScopeHeader:
+      name: Authorization
+      in: header
+      description: |
+        An OAuth 2.0 Bearer Token with the *write:vat* scope.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: Bearer bb7fed3fe10dd235a2ccda3d50fb
   securitySchemes:
     userRestricted:
       type: oauth2
