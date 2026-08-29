@@ -138,7 +138,7 @@ paths:
                     reportId: 'f2fb30e5-4ab6-4a29-b3c1-c00000000001'
                     correlationId: 'E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D'
                     englishFeedback:
-                      - itemNumber: '1'
+                      - itemNumber: '001'
                         title: 'HMRC feedback: VAT due on sales appears low'
                         body: 'The VAT due on sales figure appears lower than expected based on your total sales value.'
                         action: 'Please review box 1 and box 6 of your VAT return.'
@@ -147,7 +147,7 @@ paths:
                             url: 'https://www.gov.uk/guidance/vat-notice-700-the-vat-guide'
                         path: 'vatDueSales'
                     welshFeedback:
-                      - itemNumber: '1'
+                      - itemNumber: '001'
                         title: 'Mae TAW sy''n ddyledus ar werthiannau yn ymddangos yn isel'
                         body: 'Mae''r ffigur TAW sy''n ddyledus ar werthiannau yn ymddangos yn is na''r disgwyl yn seiliedig ar gyfanswm eich gwerthiannau.'
                         action: 'Adolygwch flwch 1 a blwch 6 eich ffurflen TAW.'
@@ -164,7 +164,7 @@ paths:
                     reportId: 'f2fb30e5-4ab6-4a29-b3c1-c00000000001'
                     correlationId: 'E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D'
                     englishFeedback:
-                      - itemNumber: '1'
+                      - itemNumber: '001'
                         title: 'HMRC feedback: VAT due on sales appears low'
                         body: 'The VAT due on sales figure appears lower than expected based on your total sales value.'
                         action: 'Please review box 1 and box 6 of your VAT return.'
@@ -172,7 +172,7 @@ paths:
                           - title: 'VAT Notice 700'
                             url: 'https://www.gov.uk/guidance/vat-notice-700-the-vat-guide'
                         path: 'vatDueSales'
-                      - itemNumber: '2'
+                      - itemNumber: '002'
                         title: 'Total value of purchases appears high'
                         body: 'The total value of purchases appears higher than expected based on your total sales value.'
                         action: 'Please review box 7 of your VAT return.'
@@ -181,7 +181,7 @@ paths:
                             url: 'https://www.gov.uk/guidance/vat-notice-700-the-vat-guide'
                         path: 'totalValuePurchasesExVAT'
                     welshFeedback:
-                      - itemNumber: '1'
+                      - itemNumber: '001'
                         title: 'Mae TAW sy''n ddyledus ar werthiannau yn ymddangos yn isel'
                         body: 'Mae''r ffigur TAW sy''n ddyledus ar werthiannau yn ymddangos yn is na''r disgwyl yn seiliedig ar gyfanswm eich gwerthiannau.'
                         action: 'Adolygwch flwch 1 a blwch 6 eich ffurflen TAW.'
@@ -189,7 +189,7 @@ paths:
                           - title: 'Hysbysiad TAW 700'
                             url: 'https://www.gov.uk/guidance/vat-notice-700-the-vat-guide'
                         path: 'vatDueSales'
-                      - itemNumber: '2'
+                      - itemNumber: '002'
                         title: 'Mae cyfanswm pryniannau''n uchel'
                         body: 'Mae cyfanswm y pryniannau''n ymddangos yn uwch na''r disgwyl.'
                         action: 'Adolygwch flwch 7 o''ch ffurflen TAW.'
@@ -206,7 +206,7 @@ paths:
                     reportId: 'f2fb30e5-4ab6-4a29-b3c1-c00000000001'
                     correlationId: 'E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D'
                     englishFeedback:
-                      - itemNumber: '0'
+                      - itemNumber: '000'
                         title: 'HMRC feedback: HMRC Assist has not returned any messages.'
                         body: 'This is not a complete check of your return or confirmation that your return is accurate. Your return has
                                not been submitted at this stage.'
@@ -215,7 +215,7 @@ paths:
                           - title: 'Go to GOV.UK for more information on HMRC Assist'
                             url: 'https://www.gov.uk'
                     welshFeedback:
-                      - itemNumber: '0'
+                      - itemNumber: '000'
                         title: 'Nid yw HMRC Assist wedi dychwelyd unrhyw negeseuon.'
                         body: 'Nid yw hwn yn wiriad cyflawn o''ch datganiad nac yn gadarnhad bod 
                                eich datganiad yn gywir. Nid yw eich datganiad wedi''i gyflwyno ar y cam hwn.'
@@ -684,7 +684,7 @@ components:
           type: string
           pattern: '^[0-9]{3}$'
           description: The unique identifier for the feedback message. Corresponding English and Welsh feedback messages will have the same number.
-          example: '1'
+          example: '001'
         title:
           type: string
           maxLength: 32767
