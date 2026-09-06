@@ -314,7 +314,7 @@ paths:
                 code: 'INTERNAL_SERVER_ERROR'
                 message: 'An unexpected error occurred.'
       security:
-        - userRestricted:
+        - User-Restricted:
             - write:vat
 
   /misc/transaction-risking/acknowledge/{vrn}/{reportId}/{correlationId}:
@@ -497,7 +497,7 @@ paths:
                 code: 'INTERNAL_SERVER_ERROR'
                 message: 'An unexpected error occurred.'
       security:
-        - userRestricted:
+        - User-Restricted:
             - write:vat
 
 components:
@@ -743,7 +743,7 @@ components:
           example: 'The provided VRN is invalid.'
 
   securitySchemes:
-    userRestricted:
+    User-Restricted:
       type: oauth2
       description: |
         HMRC supports OAuth 2.0 for authenticating user restricted API requests
