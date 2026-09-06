@@ -8,7 +8,7 @@ info:
     1. Send draft return data.
     2. Use the relevant acknowledgement endpoint to confirm that your software has presented the HMRC Assist feedback messages to the user.
 
-    Because this process operates on draft, unfinalised data, requesting feedback carries no formal declaration. Also, the process does not block formal declaration submission via the *returns* endpoint of the VAT (MTD) API. Your software must allow customers to submit their VAT return, irrespective of any HMRC Assist submission feedback.
+    Because this process operates on draft, unfinalised data, requesting feedback carries no formal declaration. Also, the process does not block formal declaration submission via the *returns* endpoint of the [VAT (MTD) API](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/). Your software must allow customers to submit their VAT return, irrespective of any HMRC Assist submission feedback.
   contact: {}
   version: "1.0"
 servers:
@@ -29,10 +29,10 @@ paths:
         \ submitting a VAT return. \n\nThe response will contain feedback messages\
         \ in English and Welsh, highlighting potential mistakes or discrepancies in\
         \ the VAT return data.\n\n**Note:** Before using this endpoint, you must first\
-        \ call the obligations endpoint on the VAT (MTD) API to get the period key.\n\
-        \n### Test data\n<p>Scenario simulations using Gov-Test-Scenario headers are\
-        \ only available in the sandbox environment.</p>\n<table>\n  <thead>\n   \
-        \ <tr>\n      <th>Header Value (Gov-Test-Scenario)</th>\n      <th>Scenario</th>\n\
+        \ call the obligations endpoint on the [VAT (MTD) API](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/)\
+        \ to get the period key.\n\n### Test data\n<p>Scenario simulations using Gov-Test-Scenario\
+        \ headers are only available in the sandbox environment.</p>\n<table>\n  <thead>\n\
+        \    <tr>\n      <th>Header Value (Gov-Test-Scenario)</th>\n      <th>Scenario</th>\n\
         \    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td><p>Default (No header\
         \ value)</p></td>\n      <td><p>Simulates the scenario where there is one\
         \ HMRC Assist feedback message.</p></td>\n    </tr>\n    <tr>\n      <td><p>MULTIPLE_FEEDBACK</p></td>\n\
@@ -117,7 +117,7 @@ paths:
                   pattern: "^[#0-9A-Z]{4}$"
                   type: string
                   description: |
-                    The ID code for the period that this obligation belongs to. This should be obtained from the obligations endpoint of the VAT (MTD) API. The format is a string of four alphanumeric characters. Occasionally the format includes the # symbol.
+                    The ID code for the period that this obligation belongs to. This should be obtained from the obligations endpoint of the [VAT (MTD) API](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/). The format is a string of four alphanumeric characters. Occasionally the format includes the # symbol.
                   example: 18AD
                 vatDueSales:
                   multipleOf: 0.01
@@ -241,14 +241,15 @@ paths:
                     example: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
                   englishFeedback:
                     type: array
-                    description: "An array that contains up to 5 HMRC Assist feedback\
-                      \ messages, in English."
+                    description: |
+                      An array that contains up to 5 HMRC Assist feedback messages, in English.
+
+                      The total number of characters across all text fields in an individual message will not exceed 32767.
                     items:
                       title: FeedbackItem
                       required:
                       - body
                       - itemNumber
-                      - path
                       - title
                       type: object
                       properties:
@@ -256,7 +257,9 @@ paths:
                           pattern: "^[0-9]{3}$"
                           type: string
                           description: The unique identifier for the feedback message.
-                          example: "001"
+                            Corresponding English and Welsh feedback messages will
+                            have the same number.
+                          example: "1"
                         title:
                           maxLength: 32767
                           type: string
@@ -306,14 +309,15 @@ paths:
                           example: vatDueSales
                   welshFeedback:
                     type: array
-                    description: "An array that contains up to 5 HMRC Assist feedback\
-                      \ messages, in Welsh."
+                    description: |
+                      An array that contains up to 5 HMRC Assist feedback messages, in Welsh.
+
+                      The total number of characters across all text fields in an individual message will not exceed 32767.
                     items:
                       title: FeedbackItem
                       required:
                       - body
                       - itemNumber
-                      - path
                       - title
                       type: object
                       properties:
@@ -321,7 +325,9 @@ paths:
                           pattern: "^[0-9]{3}$"
                           type: string
                           description: The unique identifier for the feedback message.
-                          example: "001"
+                            Corresponding English and Welsh feedback messages will
+                            have the same number.
+                          example: "1"
                         title:
                           maxLength: 32767
                           type: string
@@ -379,8 +385,8 @@ paths:
                     reportId: f2fb30e5-4ab6-4a29-b3c1-c00000000001
                     correlationId: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
                     englishFeedback:
-                    - itemNumber: "001"
-                      title: VAT due on sales appears low
+                    - itemNumber: "1"
+                      title: "HMRC feedback: VAT due on sales appears low"
                       body: The VAT due on sales figure appears lower than expected
                         based on your total sales value.
                       action: Please review box 1 and box 6 of your VAT return.
@@ -389,7 +395,7 @@ paths:
                         url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
                       path: vatDueSales
                     welshFeedback:
-                    - itemNumber: "001"
+                    - itemNumber: "1"
                       title: Mae TAW sy'n ddyledus ar werthiannau yn ymddangos yn
                         isel
                       body: Mae'r ffigur TAW sy'n ddyledus ar werthiannau yn ymddangos
@@ -408,8 +414,8 @@ paths:
                     reportId: f2fb30e5-4ab6-4a29-b3c1-c00000000001
                     correlationId: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
                     englishFeedback:
-                    - itemNumber: "001"
-                      title: VAT due on sales appears low
+                    - itemNumber: "1"
+                      title: "HMRC feedback: VAT due on sales appears low"
                       body: The VAT due on sales figure appears lower than expected
                         based on your total sales value.
                       action: Please review box 1 and box 6 of your VAT return.
@@ -417,7 +423,7 @@ paths:
                       - title: VAT Notice 700
                         url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
                       path: vatDueSales
-                    - itemNumber: "002"
+                    - itemNumber: "2"
                       title: Total value of purchases appears high
                       body: The total value of purchases appears higher than expected
                         based on your total sales value.
@@ -427,7 +433,7 @@ paths:
                         url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
                       path: totalValuePurchasesExVAT
                     welshFeedback:
-                    - itemNumber: "001"
+                    - itemNumber: "1"
                       title: Mae TAW sy'n ddyledus ar werthiannau yn ymddangos yn
                         isel
                       body: Mae'r ffigur TAW sy'n ddyledus ar werthiannau yn ymddangos
@@ -437,7 +443,7 @@ paths:
                       - title: Hysbysiad TAW 700
                         url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
                       path: vatDueSales
-                    - itemNumber: "002"
+                    - itemNumber: "2"
                       title: Mae cyfanswm pryniannau'n uchel
                       body: Mae cyfanswm y pryniannau'n ymddangos yn uwch na'r disgwyl.
                       action: Adolygwch flwch 7 o'ch ffurflen TAW.
@@ -445,6 +451,34 @@ paths:
                       - title: Hysbysiad TAW 700
                         url: https://www.gov.uk/guidance/vat-notice-700-the-vat-guide
                       path: totalValuePurchasesExVAT
+                Example 3 (no feedback):
+                  description: |
+                    The scenario where there is no HMRC Assist feedback.
+
+                    Note that the message in this example is for illustration purposes only.
+                  value:
+                    reportId: f2fb30e5-4ab6-4a29-b3c1-c00000000001
+                    correlationId: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
+                    englishFeedback:
+                    - itemNumber: "0"
+                      title: "HMRC feedback: HMRC Assist has not returned any messages."
+                      body: This is not a complete check of your return or confirmation
+                        that your return is accurate. Your return has not been submitted
+                        at this stage.
+                      action: Consider any further checks before finalising your return.
+                      links:
+                      - title: Go to GOV.UK for more information on HMRC Assist
+                        url: https://www.gov.uk
+                    welshFeedback:
+                    - itemNumber: "0"
+                      title: Nid yw HMRC Assist wedi dychwelyd unrhyw negeseuon.
+                      body: Nid yw hwn yn wiriad cyflawn o'ch datganiad nac yn gadarnhad
+                        bod eich datganiad yn gywir. Nid yw eich datganiad wedi'i
+                        gyflwyno ar y cam hwn.
+                      action: Ystyriwch unrhyw wiriadau pellach cyn cwblhau eich datganiad.
+                      links:
+                      - title: Ewch i GOV.UK am ragor o wybodaeth am HMRC Assist
+                        url: https://www.gov.uk
         "400":
           description: Bad request. Invalid request body or parameters.
           content:
@@ -759,10 +793,10 @@ paths:
                     description: A human-readable description of the error.
                     example: The provided VRN is invalid.
               examples:
-                FORMAT_VRN:
+                VRN_INVALID:
                   summary: Invalid VRN
                   value:
-                    code: FORMAT_VRN
+                    code: VRN_INVALID
                     message: The provided VRN is invalid.
                 FORMAT_REPORT_ID:
                   summary: Invalid Report ID
@@ -898,7 +932,7 @@ components:
           pattern: "^[#0-9A-Z]{4}$"
           type: string
           description: |
-            The ID code for the period that this obligation belongs to. This should be obtained from the obligations endpoint of the VAT (MTD) API. The format is a string of four alphanumeric characters. Occasionally the format includes the # symbol.
+            The ID code for the period that this obligation belongs to. This should be obtained from the obligations endpoint of the [VAT (MTD) API](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/). The format is a string of four alphanumeric characters. Occasionally the format includes the # symbol.
           example: 18AD
         vatDueSales:
           multipleOf: 0.01
@@ -995,22 +1029,24 @@ components:
           example: E9F65715BBC9222477B27074804BBDD5C73CDE62F84D8B00CFD05B883534AF3D
         englishFeedback:
           type: array
-          description: "An array that contains up to 5 HMRC Assist feedback messages,\
-            \ in English."
+          description: |
+            An array that contains up to 5 HMRC Assist feedback messages, in English.
+
+            The total number of characters across all text fields in an individual message will not exceed 32767.
           items:
             title: FeedbackItem
             required:
             - body
             - itemNumber
-            - path
             - title
             type: object
             properties:
               itemNumber:
                 pattern: "^[0-9]{3}$"
                 type: string
-                description: The unique identifier for the feedback message.
-                example: "001"
+                description: The unique identifier for the feedback message. Corresponding
+                  English and Welsh feedback messages will have the same number.
+                example: "1"
               title:
                 maxLength: 32767
                 type: string
@@ -1058,22 +1094,24 @@ components:
                 example: vatDueSales
         welshFeedback:
           type: array
-          description: "An array that contains up to 5 HMRC Assist feedback messages,\
-            \ in Welsh."
+          description: |
+            An array that contains up to 5 HMRC Assist feedback messages, in Welsh.
+
+            The total number of characters across all text fields in an individual message will not exceed 32767.
           items:
             title: FeedbackItem
             required:
             - body
             - itemNumber
-            - path
             - title
             type: object
             properties:
               itemNumber:
                 pattern: "^[0-9]{3}$"
                 type: string
-                description: The unique identifier for the feedback message.
-                example: "001"
+                description: The unique identifier for the feedback message. Corresponding
+                  English and Welsh feedback messages will have the same number.
+                example: "1"
               title:
                 maxLength: 32767
                 type: string
@@ -1124,15 +1162,15 @@ components:
       required:
       - body
       - itemNumber
-      - path
       - title
       type: object
       properties:
         itemNumber:
           pattern: "^[0-9]{3}$"
           type: string
-          description: The unique identifier for the feedback message.
-          example: "001"
+          description: The unique identifier for the feedback message. Corresponding
+            English and Welsh feedback messages will have the same number.
+          example: "1"
         title:
           maxLength: 32767
           type: string
