@@ -317,7 +317,7 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailable'
       security:
-        - userRestricted:
+        - User-Restricted:
             - write:vat
 
   /organisations/vat-assist/acknowledge/{vrn}/{reportId}/{correlationId}:
@@ -513,7 +513,7 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailable'
       security:
-        - userRestricted:
+        - User-Restricted:
             - write:vat
 
 components:
@@ -778,7 +778,7 @@ components:
           example: 'The provided VRN is invalid'
 
   securitySchemes:
-    userRestricted:
+    User-Restricted:
       type: oauth2
       description: |
         HMRC supports OAuth 2.0 for authenticating user restricted API requests
